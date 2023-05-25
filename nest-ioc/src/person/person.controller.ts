@@ -16,6 +16,11 @@ export class PersonController {
   //   return `received: name=${name},age=${age}`;
   // }
 
+  // @Post()
+  // body(@Body() createPersonDto: CreatePersonDto) {
+  //   return `received: ${JSON.stringify(createPersonDto)}`;
+  // }
+
   @Post()
   body(@Body() createPersonDto: CreatePersonDto) {
     return `received: ${JSON.stringify(createPersonDto)}`;

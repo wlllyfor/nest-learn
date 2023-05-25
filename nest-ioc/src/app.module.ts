@@ -1,13 +1,58 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TaskModule } from './task/task.module';
-import { ProblemModule } from './problem/problem.module';
-import { PersonModule } from './person/person.module';
 
 @Module({
-  imports: [TaskModule, ProblemModule, PersonModule],
+  imports: [],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'app_service',
+      useClass: AppService,
+    },
+    {
+      provide: 'person',
+      useValue: {
+        name: 'aaa',
+        age: 20,
+      },
+    },
+    {
+      provide: 'person2',
+      useFactory() {
+        return {
+          name: 'bbb',
+          desc: 'cccc',
+        };
+      },
+    },
+    {
+      provide: 'person5',
+      async useFactory() {
+        await new Promise((resolve) => {
+          setTimeout(resolve, 3000);
+        });
+        return {
+          name: 'bbb',
+          desc: 'cccc',
+        };
+      },
+    },
+    {
+      provide: 'person3',
+      useFactory(person: { name: string }, appService: AppService) {
+        return {
+          name: person.name,
+          desc: appService.getHello(),
+        };
+      },
+      inject: ['person', AppService],
+    },
+    {
+      provide: 'person4',
+      useExisting: 'person2',
+    },
+  ],
 })
 export class AppModule {}
